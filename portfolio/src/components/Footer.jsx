@@ -1,6 +1,7 @@
 // Footer.jsx
 import React from "react";
 import Logo from "./Logo";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -9,7 +10,9 @@ const Footer = () => {
         <p>All Rights Reserved to</p>
       </div>
       <div className="w-40 bg-black p-2 m-2">
-        <Logo /> {/* Assuming Logo is another component */}
+        <Link to="/">
+          <Logo /> {/* Assuming Logo is another component */}
+        </Link>
       </div>
     </div>
   );

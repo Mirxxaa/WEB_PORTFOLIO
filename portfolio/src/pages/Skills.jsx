@@ -1,55 +1,65 @@
 import React, { useEffect, useState } from "react";
-import SpotlightCard from "@/components/SpotlightCard";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { db } from "@/firebase"; // Import Firebase Firestore instance
-import { collection, getDocs } from "firebase/firestore"; // Import Firestore functions
+import SpotlightCard from "../components/SpotlightCard";
+import { db } from "../firebase"; // Firebase Firestore instance
+import { collection, getDocs } from "firebase/firestore"; // Firestore functions
+import Footer from "../components/Footer";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 const Skills = () => {
-  const [skills, setSkills] = useState([]); // State to store fetched skills
-  const [loading, setLoading] = useState(true); // State to handle loading state
-  const [error, setError] = useState(null); // State to handle errors
+  const [skills, setSkills] = useState([]); // State for skills
+  const [tools, setTools] = useState([]); // State for tools
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error handling
 
-  // Fetch data from Firebase Firestore
+  // Fetch both tools and skills
   useEffect(() => {
-    const fetchSkills = async () => {
+    const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "skills")); // Fetch all skills from Firestore
-        const skillsData = querySnapshot.docs.map((doc) => doc.data()); // Map the documents to an array of data
-        setSkills(skillsData); // Update the state with fetched data
-        setLoading(false); // Set loading to false
+        // Fetch Skills
+        const skillsSnapshot = await getDocs(collection(db, "skills"));
+        const skillsData = skillsSnapshot.docs.map((doc) => ({
+          _id: doc.id,
+          ...doc.data(),
+        }));
+
+        // Fetch Tools
+        const toolsSnapshot = await getDocs(collection(db, "tools"));
+        const toolsData = toolsSnapshot.docs.map((doc) => doc.data());
+
+        setSkills(skillsData); // Set skills state
+        setTools(toolsData); // Set tools state
+        setLoading(false); // Stop loading
       } catch (error) {
-        console.error("Error fetching skills:", error);
-        setError("Failed to fetch skills. Please try again later."); // Set error message
-        setLoading(false); // Set loading to false
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data. Please try again later."); // Handle error
+        setLoading(false);
       }
     };
 
-    fetchSkills(); // Call the fetch function
-  }, []); // Empty dependency array ensures this runs only once on mount
+    fetchData();
+  }, []);
 
-  // Slider settings
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    responsive: [
-      {
-        breakpoint: 640, // Mobile screens (max-width: 640px)
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+  // Function to display stars based on proficiency level
+  const renderStars = (rating) => {
+    const validRating =
+      !isNaN(rating) && rating >= 0 && rating <= 5 ? rating : 0;
+    const fullStars = Math.floor(validRating);
+    const hasHalfStar = validRating % 1 !== 0;
+
+    return (
+      <>
+        {[...Array(fullStars)].map((_, i) => (
+          <FaStar key={i} className="text-yellow-600" />
+        ))}
+        {hasHalfStar && <FaStarHalfAlt className="text-yellow-600" />}
+        {[...Array(5 - Math.ceil(validRating))].map((_, i) => (
+          <FaRegStar key={i} className="text-yellow-600" />
+        ))}
+      </>
+    );
   };
 
-  // Display loading state
+  // Show loading state
   if (loading) {
     return (
       <div className="w-full h-screen bg-black flex justify-center items-center">
@@ -58,7 +68,7 @@ const Skills = () => {
     );
   }
 
-  // Display error state
+  // Show error state
   if (error) {
     return (
       <div className="bg-black h-screen flex items-center justify-center">
@@ -68,48 +78,57 @@ const Skills = () => {
   }
 
   return (
-    <div className="bg-black h-screen">
-      <div className="w-[80vw] m-auto">
-        <div className="text-4xl text-white font-bold text-center mb-4">
-          <h1>My Skills</h1>
+    <div className="bg-black min-h-auto">
+      <div className="w-[80vw] m-auto py-10">
+        {/* Skills Section */}
+        <div className="flex items-center justify-center text-white font-bold mb-4">
+          <h1 className="text-2xl font-semibold mr-4">Skills</h1>
+          <div className="flex-grow border-t-1 border-white"></div>
         </div>
-        {/* Grid for larger screens */}
-        <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6 p-6">
+
+        <div className="flex flex-wrap gap-4 justify-start p-6 mb-4">
           {skills.map((skill, index) => (
-            <SpotlightCard key={index} className="flex flex-col items-center">
-              <img
-                src={skill.skillImage}
-                alt={skill.skillName}
-                className="w-20 h-20 object-contain mb-4"
-              />
-              <p className="text-center text-white text-lg font-medium">
+            <div
+              key={index}
+              className="flex flex-col items-start w-full sm:w-auto"
+            >
+              <span className="bg-gray-800 text-white text-sm font-medium px-4 py-2 rounded-full shadow-md mb-2">
                 {skill.skillName}
-              </p>
-            </SpotlightCard>
+              </span>
+              <div className="flex items-start justify-start flex-wrap text-sm gap-1">
+                {renderStars(skill.proficiencyLevel)}
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* Carousel for mobile screens */}
-        <div className="block md:hidden p-6">
-          <Slider {...settings}>
-            {skills.map((skill, index) => (
+        {/* Tools Section */}
+        <div className="flex items-center justify-center text-white font-bold mb-8">
+          <h1 className="text-2xl font-semibold mr-4">Tools</h1>
+          <div className="flex-grow border-t-1 border-white"></div>
+        </div>
+        <div className="overflow-hidden w-full">
+          <div className="flex flex-wrap animate-scroll gap-6 p-6">
+            {tools.map((tool, index) => (
               <SpotlightCard
                 key={index}
-                className="flex flex-col items-center mx-4"
+                className=" flex flex-col items-center"
               >
                 <img
-                  src={skill.skillImage}
-                  alt={skill.skillName}
-                  className="w-16 h-16 object-contain mb-4"
+                  src={tool.toolImage}
+                  alt={tool.toolName}
+                  className="w-20 h-20 object-contain mb-4"
                 />
                 <p className="text-center text-white text-lg font-medium">
-                  {skill.skillName}
+                  {tool.toolName}
                 </p>
               </SpotlightCard>
             ))}
-          </Slider>
+          </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

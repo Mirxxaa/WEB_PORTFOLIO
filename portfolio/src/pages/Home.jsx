@@ -1,13 +1,13 @@
 // src/pages/Home.jsx
 import React, { useState, useEffect } from "react";
-import SplitText from "@/components/SplitText";
-import BlurText from "@/components/BlurText";
-import Hyperspeed from "@/components/Hyperspeed";
+import SplitText from "../components/SplitText";
+import BlurText from "../components/BlurText";
+import Hyperspeed from "../components/Hyperspeed";
 import Profilepic from "../assets/pngpic.png";
-import Logo from "@/components/Logo";
-import InfiniteScroll from "@/components/InfiniteScroll";
+import Logo from "../components/Logo";
+import InfiniteScroll from "../components/InfiniteScroll";
 import { Input } from "@heroui/input";
-import Footer from "@/components/Footer";
+import Footer from "../components/Footer";
 import "aos/dist/aos.css"; // Import AOS styles
 import AOS from "aos"; // Import AOS functionality
 
@@ -97,8 +97,8 @@ const Home = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent the default form submission and page refresh
 
     // Prepare the form data to be sent to Google Sheets via Google Apps Script
     const url =
@@ -129,7 +129,7 @@ const Home = () => {
   return (
     <div className="overflow-hidden">
       <div>
-        <Hyperspeed
+        {/* <Hyperspeed
           effectOptions={{
             onSpeedUp: () => {},
             onSlowDown: () => {},
@@ -167,7 +167,7 @@ const Home = () => {
               sticks: 0x03b3c3,
             },
           }}
-        />
+        /> */}
       </div>
       <div className="min-h-screen bg-black flex flex-col justify-center text-white ">
         {/* Hello Section */}
@@ -224,7 +224,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="h-screen bg-black flex justify-center overflow-hidden items-center ">
+      <div className="h-auto p-4 bg-black flex justify-center overflow-hidden items-center ">
         <div className="flex-1 grid sm:grid-cols-1 lg:grid-cols-2  gap-0">
           <div data-aos="fade-right" className="h-[500px] text-white flex-1  ">
             <InfiniteScroll
@@ -237,49 +237,48 @@ const Home = () => {
               pauseOnHover={true}
             />
           </div>
-          <div className="flex-1 p-16">
+          <div className="flex-1 p-16 h-auto sm:p-10 lg:p-16">
             <div>
-              {" "}
               <h3
                 data-aos="fade-up"
-                className="text-4xl font-semibold py-8 text-white"
+                className="text-3xl sm:text-4xl font-semibold py-4 sm:py-8 text-white"
               >
                 Experience
               </h3>
             </div>
-            <div className=" text-white flex-1  ">
+            <div className="text-white  flex-1">
               <Accordion type="single" collapsible>
                 <AccordionItem data-aos="fade-up" value="item-1">
-                  <AccordionTrigger>
+                  <AccordionTrigger className="text-md sm:text-sm ">
                     MultiMedia Designer - 2019 to 2021
                   </AccordionTrigger>
-                  <AccordionContent>
-                    Worked as an Multimedia Designer at Efforts Pvt Ltd. My role
-                    was to create stunning designs for corporate clients, Where
-                    i Use Softwares Like Adobe Illustrator, Adobe Photoshop,
-                    Adobe XD, Figma, Corel Draw, After Effects, Blendar etc.
+                  <AccordionContent className="text-base sm:text-sm">
+                    Worked as a Multimedia Designer at Efforts Pvt Ltd. My role
+                    was to create stunning designs for corporate clients, where
+                    I used software like Adobe Illustrator, Adobe Photoshop,
+                    Adobe XD, Figma, Corel Draw, After Effects, Blender, etc.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem data-aos="fade-up" value="item-2">
-                  <AccordionTrigger>
-                    Sr. MultiMedia Designer - 2022 to 2024{" "}
+                  <AccordionTrigger className="text-md sm:text-sm">
+                    Sr. MultiMedia Designer - 2022 to 2024
                   </AccordionTrigger>
-                  <AccordionContent>
-                    At Smart Advertising i worked as an Multimedia Designer, My
-                    role was to create responsive UI designs of applications and
-                    web application for Clients and Create Designs for print and
-                    digital media.
+                  <AccordionContent className="text-base sm:text-sm">
+                    At Smart Advertising, I worked as a Multimedia Designer. My
+                    role was to create responsive UI designs for applications
+                    and web applications for clients and create designs for
+                    print and digital media.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem data-aos="fade-up" value="item-3">
-                  <AccordionTrigger>
+                  <AccordionTrigger className="text-md sm:text-sm">
                     Sr. Visual Designer - 2024 to Present
                   </AccordionTrigger>
-                  <AccordionContent>
-                    At Optimum Business Solutions i worked as an Sr. Visual
-                    Design who worked on there application UI and Web Pannel UI,
-                    as well as front End Development for Application and Web
-                    pannel Dashboard, Using ReactJs, Tailwind Css.
+                  <AccordionContent className="text-base sm:text-sm">
+                    At Optimum Business Solutions, I worked as a Sr. Visual
+                    Designer, responsible for their application UI and web panel
+                    UI, as well as front-end development for the application and
+                    web panel dashboard, using ReactJS and Tailwind CSS.
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -288,68 +287,75 @@ const Home = () => {
         </div>
       </div>
 
-      <div data-aos="fade-up" className="min-h-[250px] p-8 ">
-        <div className="bg-black w-full h-full rounded-3xl md:py-12 py-8 flex items-center justify-center">
+      <div
+        data-aos="fade-up"
+        className="h-screen flex items-center justify-center p-6"
+      >
+        <div
+          className="bg-black w-full justify-center
+         p-8 rounded-2xl flex flex-col"
+        >
+          <div>
+            <h3 className="text-white text-2xl my-6">Contact Me</h3>
+          </div>
           <form
-            action="submit"
-            className="flex  justify-center items-center flex-1 h-full "
+            onSubmit={handleSubmit}
+            className=" w-full flex items-center justify-center flex-col"
           >
-            <div className="flex flex-col flex-1 gap-4 items-center justify-center">
-              <h2 className="text-white text-2xl font-semibold py-4">
-                {" "}
-                CONTACT ME{" "}
-              </h2>
-              <div className=" md:w-full px-4  md:p-0 flex justify-center items-center ">
-                <div className="flex flex-col gap-6 w-full justify-center items-center ">
-                  <form
-                    onSubmit={handleSubmit}
-                    className="flex w-full items-center flex-col flex-wrap md:flex-nowrap gap-4 px-8"
-                  >
-                    <div className="flex flex-1 w-full gap-4">
-                      <Input
-                        label="Name"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        type="text"
-                        isRequired
-                      />
-                      <Input
-                        label="Email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        type="email"
-                        id="email"
-                        name="email"
-                        isRequired
-                      />
-                      <Input
-                        label="Country"
-                        value={formData.country}
-                        onChange={handleInputChange}
-                        type="text"
-                        id="country"
-                        name="country"
-                        isRequired
-                      />
-                      <Input
-                        label="Phone With Country Code"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        type="number"
-                        id="phone"
-                        name="phone"
-                        isRequired
-                      />
-                    </div>
-
-                    <button className="text-white font-semibold bg-gray-600 hover:bg-white hover:text-black transition-all duration-300 flex justify-center items-center px-4 py-2 rounded-xl">
-                      Submit
-                    </button>
-                  </form>
-                </div>
+            <div className="flex flex-col gap-4 w-full">
+              <div className="mb-4 ">
+                <Input
+                  label="Name"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  type="text"
+                  isRequired
+                />
               </div>
+
+              <div className="mb-4 w-full ">
+                <Input
+                  label="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  type="email"
+                  id="email"
+                  name="email"
+                  isRequired
+                />
+              </div>
+
+              <div className="mb-4 w-full ">
+                <Input
+                  label="Country"
+                  value={formData.country}
+                  onChange={handleInputChange}
+                  type="text"
+                  id="country"
+                  name="country"
+                  isRequired
+                />
+              </div>
+
+              <div className="mb-4 w-full ">
+                <Input
+                  label="Phone With Country Code"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  type="number"
+                  id="phone"
+                  name="phone"
+                  isRequired
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-center md:justify-start mt-4 md:mt-0 w-full">
+              <button className="text-white font-semibold w-fit bg-gray-600 hover:bg-white hover:text-black transition-all duration-300 flex justify-center items-center px-6 py-3 rounded-xl">
+                Submit
+              </button>
             </div>
           </form>
         </div>

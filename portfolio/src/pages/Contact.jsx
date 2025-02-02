@@ -3,7 +3,7 @@ import { FaEnvelope, FaPhoneAlt, FaLinkedin } from "react-icons/fa";
 import { Input } from "@heroui/input";
 import "aos/dist/aos.css"; // Import AOS styles
 import AOS from "aos"; // Import AOS functionality
-import Footer from "@/components/Footer";
+import Footer from "../components/Footer";
 
 const Contact = () => {
   useEffect(() => {

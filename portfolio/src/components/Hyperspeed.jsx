@@ -9,7 +9,7 @@ import {
   SMAAPreset,
 } from "postprocessing";
 
-import "../styles/hyperspeed.css";
+import "../styles/Hyperspeed.css";
 
 const Hyperspeed = ({
   effectOptions = {
